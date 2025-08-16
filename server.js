@@ -13,7 +13,7 @@ const connection = require("./config/db")
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://singh-construction-design.vercel.app'
+  'https://singh-construction-design.vercel.app/'
 ];
 
 server.use(cors({
