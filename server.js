@@ -40,24 +40,9 @@ server.get("/", (req, res) => {
     console.log("This is Home Page")
 })
 
-
-
-
-// const allowedOrigins = [
-//   'http://localhost:5173',
-//   //'https://raghvendra-bhadouriya-portfolio.vercel.app'
-// ];
-
-// server.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   },
-//   credentials: true
-// }));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "build", "index.html"));
+});
 
 server.listen(PORT, async (req, res) => {
     try {
