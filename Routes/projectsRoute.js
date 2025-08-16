@@ -1,8 +1,8 @@
 const express = require("express")
-const route = express.Router()
+const router = express.Router()
 const projectModel = require("../Schemas/projectsSchema")
 
-route.post("/add_project", async (req, res) => {
+router.post("/add_project", async (req, res) => {
     try {
         
         const newProject = new projectModel(req.body)
@@ -17,7 +17,7 @@ route.post("/add_project", async (req, res) => {
     }
 })
 
-route.get("/projects", async (req, res) => {
+router.get("/projects", async (req, res) => {
     try {
         const allProjects = await projectModel.find()
         res.status(200).json({
@@ -29,7 +29,7 @@ route.get("/projects", async (req, res) => {
     }
 })
 
-route.get("/single_image/:id", async (req, res) => {
+router.get("/single_image/:id", async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -51,6 +51,6 @@ route.get("/single_image/:id", async (req, res) => {
     }
 })
 
-module.exports = route;
+module.exports = router;
 
 
