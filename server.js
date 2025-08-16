@@ -6,26 +6,26 @@ const server = express();
 const connection = require("./config/db")
 
 
-server.use(cors({
-    origin: "https://singh-construction-design.vercel.app", // frontend URL
-    credentials: true
-}));
-
-// const allowedOrigins = [
-//   'http://localhost:5173',
-//   'https://singh-construction-design.vercel.app/'
-// ];
-
 // server.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   },
-//   credentials: true
+//     origin: "https://singh-construction-design.vercel.app", // frontend URL
+//     credentials: true
 // }));
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://singh-construction-design.vercel.app'
+];
+
+server.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}));
 
 server.use(express.json())
 
@@ -40,7 +40,7 @@ server.get("/", (req, res) => {
     console.log("This is Home Page")
 })
 
-app.get("*", (req, res) => {
+server.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "build", "index.html"));
 });
 
