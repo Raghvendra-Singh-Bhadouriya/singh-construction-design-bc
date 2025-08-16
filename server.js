@@ -6,9 +6,25 @@ const server = express();
 const connection = require("./config/db")
 
 
+// server.use(cors({
+//     origin: "http://localhost:5173", // frontend URL
+//     credentials: true
+// }));
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://singh-construction-design.vercel.app/projects'
+];
+
 server.use(cors({
-    origin: "http://localhost:5173", // frontend URL
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
 }));
 
 server.use(express.json())
