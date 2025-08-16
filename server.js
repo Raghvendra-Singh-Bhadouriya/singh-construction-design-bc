@@ -1,5 +1,5 @@
 require("dotenv").config();
-const path = require("path")
+//const path = require("path")
 const cors = require("cors");
 const express = require("express");
 const PORT = process.env.PORT || 8080
@@ -41,9 +41,9 @@ server.get("/", (req, res) => {
     console.log("This is Home Page")
 })
 
-server.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "build", "index.html"));
-});
+// server.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "build", "index.html"));
+// });
 
 server.listen(PORT, async (req, res) => {
     try {
