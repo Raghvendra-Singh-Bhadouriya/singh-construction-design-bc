@@ -15,6 +15,9 @@ const upload = multer({ storage });
 
 router.post("/add_project", upload.array("images"), async (req, res) => {
     try {
+        console.log("REQ BODY:", req.body);       // log address fields
+        console.log("REQ FILES:", req.files);     // log uploaded files
+
         const { street, city, state, pincode } = req.body;
 
         if (!street || !city || !state || !pincode) {

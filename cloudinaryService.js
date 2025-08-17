@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+import streamifier from 'streamifier';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,8 +18,12 @@ export const uploadImageToCloudinary = (fileBuffer, publicId) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       { public_id: publicId, resource_type: 'image' },
       (error, result) => {
-        if (error) reject(error);
-        else resolve(result.secure_url);
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+          reject(error);
+        } else {
+          resolve(result.secure_url);
+        }
       }
     );
 
