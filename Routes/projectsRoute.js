@@ -13,7 +13,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
-router.post("/add_project", upload.array("image"), async (req, res) => {
+router.post("/add_project", upload.array("images"), async (req, res) => {
     try {
         const { street, city, state, pincode } = req.body;
 
@@ -35,7 +35,7 @@ router.post("/add_project", upload.array("image"), async (req, res) => {
             imageArray.push({ url });
         }
 
-        // upload data into mongoDB database
+        // Save project in MongoDB
         const newProject = new projectModel({
             address: { street, city, state, pincode },
             image: imageArray,
