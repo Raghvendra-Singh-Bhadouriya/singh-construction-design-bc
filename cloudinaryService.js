@@ -8,16 +8,34 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-// Upload image to Cloudinary
-export const uploadImageToCloudinary = async (file, publicId) => {
-  try {
-    const result = await cloudinary.uploader.upload(file, { public_id: publicId });
-    return result.secure_url;
-  } catch (err) {
-    console.error('Cloudinary Upload Error:', err);
-    throw err;
-  }
+
+
+
+// Upload image to Cloudinary from buffer
+export const uploadImageToCloudinary = (fileBuffer, publicId) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { public_id: publicId, resource_type: 'image' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result.secure_url);
+      }
+    );
+
+    streamifier.createReadStream(fileBuffer).pipe(uploadStream);
+  });
 };
+
+// Upload image to Cloudinary
+// export const uploadImageToCloudinary = async (file, publicId) => {
+//   try {
+//     const result = await cloudinary.uploader.upload(file, { public_id: publicId });
+//     return result.secure_url;
+//   } catch (err) {
+//     console.error('Cloudinary Upload Error:', err);
+//     throw err;
+//   }
+// };
 
 
 

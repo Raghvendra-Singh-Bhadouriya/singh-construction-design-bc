@@ -13,12 +13,16 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
-router.post("/add_project", upload.array("images"), async (req, res) => {
+router.post("/add_project", upload.array("image"), async (req, res) => {
     try {
         const { street, city, state, pincode } = req.body;
 
         if (!street || !city || !state || !pincode) {
             return res.status(400).json({ message: "Address fields are required" });
+        }
+
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: "At least one image is required" });
         }
 
         const imageArray = [];
@@ -36,7 +40,7 @@ router.post("/add_project", upload.array("images"), async (req, res) => {
             address: { street, city, state, pincode },
             image: imageArray,
         })
-        newProject.save()
+        await newProject.save()
 
         res.status(201).json({
             message: `Project added successfully`,
@@ -66,12 +70,14 @@ router.get("/single_image/:id", async (req, res) => {
         const { id } = req.params;
 
         const project = await projectModel.findOne({"image._id": id})
-
         if(!project){
             return res.status(404).json({message: `Image not found`})
         }
 
         const image = project.image.id(id)
+        if (!image) {
+            return res.status(404).json({ message: "Image not found in project" })
+        }
         
         console.log(image)
         res.status(200).json({
