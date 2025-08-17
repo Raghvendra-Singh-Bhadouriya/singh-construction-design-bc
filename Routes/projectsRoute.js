@@ -1,11 +1,41 @@
-const express = require("express")
-const router = express.Router()
-const projectModel = require("../Schemas/projectsSchema")
+//const express = require("express")
+// const router = express.Router()
+// const projectModel = require("../Schemas/projectsSchema")
 
-router.post("/add_project", async (req, res) => {
+import express from "express"
+import multer from "multer";
+import projectModel from "../Schemas/projectsSchema.js"
+import { uploadImageToCloudinary } from "../cloudinaryService.js";
+
+const router = express.Router()
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+
+router.post("/add_project", upload.array("images"), async (req, res) => {
     try {
-        
-        const newProject = new projectModel(req.body)
+        const { street, city, state, pincode } = req.body;
+
+        if (!street || !city || !state || !pincode) {
+            return res.status(400).json({ message: "Address fields are required" });
+        }
+
+        const imageArray = [];
+
+        // Upload each image to Cloudinary
+        for (let i = 0; i < req.files.length; i++) {
+            const fileBuffer = req.files[i].buffer;
+            const publicId = `${street}-${Date.now()}-${i}`;
+            const url = await uploadImageToCloudinary(fileBuffer, publicId);
+            imageArray.push({ url });
+        }
+
+        // upload data into mongoDB database
+        const newProject = new projectModel({
+            address: { street, city, state, pincode },
+            image: imageArray,
+        })
         newProject.save()
 
         res.status(201).json({
@@ -17,6 +47,7 @@ router.post("/add_project", async (req, res) => {
     }
 })
 
+//============== get request for all project ===============//
 router.get("/projects", async (req, res) => {
     try {
         const allProjects = await projectModel.find()
@@ -29,6 +60,7 @@ router.get("/projects", async (req, res) => {
     }
 })
 
+//============== get request for specific image by id ==============//
 router.get("/single_image/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -51,6 +83,6 @@ router.get("/single_image/:id", async (req, res) => {
     }
 })
 
-module.exports = router;
 
-
+export default router;
+//module.exports = router;

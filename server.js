@@ -1,17 +1,17 @@
-require("dotenv").config();
-//const path = require("path")
-const cors = require("cors");
-const express = require("express");
-const PORT = process.env.PORT || 8080
+import dotenv from 'dotenv';
+dotenv.config();
+
+import cors from 'cors';
+import express from 'express';
+
+import connection from './config/db.js'; // add .js extension for local file imports
+//const projectRoute = require("./Routes/projectsRoute")
+import projectRoute from "./Routes/projectsRoute.js"
+
+const PORT = process.env.PORT || 8080;
 const server = express();
-const connection = require("./config/db")
 
-
-// server.use(cors({
-//     origin: "https://singh-construction-design.vercel.app", // frontend URL
-//     credentials: true
-// }));
-
+// cors origin allow two origins locally and deploy ft url.
 const allowedOrigins = [
   'http://localhost:5173',
   'https://singh-construction-design.vercel.app'
@@ -28,22 +28,16 @@ server.use(cors({
   credentials: true
 }));
 
+
 server.use(express.json())
 
-const projectRoute = require("./Routes/projectsRoute")
-
-
-
 server.use("/", projectRoute)
+
 
 server.get("/", (req, res) => {
     res.status(200).json({message: "This is Home Page"})
     console.log("This is Home Page")
 })
-
-// server.get("*", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "build", "index.html"));
-// });
 
 server.listen(PORT, async (req, res) => {
     try {
@@ -53,3 +47,26 @@ server.listen(PORT, async (req, res) => {
         console.log(`❌ Server is running failed ${error.message}`)
     }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+// require("dotenv").config();
+// const cors = require("cors");
+// const express = require("express");
+// const PORT = process.env.PORT || 8080
+// const server = express();
+// const connection = require("./config/db")
+
+// server.use(cors({
+//     origin: "https://singh-construction-design.vercel.app", // frontend URL
+//     credentials: true
+// }));
