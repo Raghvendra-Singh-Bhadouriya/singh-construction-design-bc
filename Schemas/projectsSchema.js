@@ -12,7 +12,13 @@ const projectSchema = new mongoose.Schema({
     image: [
         {
             _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-            url: { type: String, required: true }
+            url: { type: String }
+        }
+    ],
+    video: [
+        {
+            _id: { type: mongoose.Schema.Types.ObjectId, auto: true},
+            url: { type: String }
         }
     ]
 },{
