@@ -9,7 +9,15 @@ import { uploadFileToCloudinary } from "../cloudinaryService.js";
 
 const router = express.Router()
 
-const storage = multer.memoryStorage();
+//const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // make sure folder exists
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
 const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 } });
 
 
