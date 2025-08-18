@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 } });
 
 
-router.post("/add_project", upload.fields([{ name: "images", maxCount: 10 },{ name: "videos", maxCount: 5 },]), async (req, res) => {
+router.post("/add_project", upload.fields([{ name: "images" },{ name: "videos" },]), async (req, res) => {
     try {
       console.log("REQ BODY:", req.body);
       console.log("REQ FILES:", req.files);
@@ -47,7 +47,7 @@ router.post("/add_project", upload.fields([{ name: "images", maxCount: 10 },{ na
         try {
           const file = imageFiles[i];
           const url = await uploadFileToCloudinary(
-            file.buffer,
+            file.path,
             `${street}-img-${Date.now()}-${i}`,
             "image"
           );
@@ -63,7 +63,7 @@ router.post("/add_project", upload.fields([{ name: "images", maxCount: 10 },{ na
         try {
           const file = videoFiles[i];
           const url = await uploadFileToCloudinary(
-            file.buffer,
+            file.path,
             `${street}-vid-${Date.now()}-${i}`,
             "video"
           );
