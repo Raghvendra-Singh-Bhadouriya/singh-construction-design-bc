@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 } });
 
-
+//==================== Post method =====================//
 router.post("/add_project", upload.fields([{ name: "images" },{ name: "videos" },]), async (req, res) => {
     try {
       console.log("REQ BODY:", req.body);
@@ -90,11 +90,25 @@ router.post("/add_project", upload.fields([{ name: "images" },{ name: "videos" }
   }
 );
 
+let cachedProjects = null;
+let lastFetchedTime = 0;
+
+const CACHE_TIME = 10 * 60 * 1000
 
 //============== get request for all project ===============//
 router.get("/projects", async (req, res) => {
+  const now = Date.now();
+
+  if(cachedProjects && (now - lastFetchedTime < CACHE_TIME)) {
+    return res.json(cachedProjects);
+  }
+
     try {
         const allProjects = await projectModel.find()
+
+        cachedProjects = allProjects;
+        lastFetchedTime = now;
+        
         res.status(200).json({
             message: `All projects fetched successfully`,
             data: allProjects

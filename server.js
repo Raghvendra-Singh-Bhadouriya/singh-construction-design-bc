@@ -3,6 +3,7 @@ dotenv.config();
 
 import cors from 'cors';
 import express from 'express';
+const { default: axios } = require("axios");
 
 import connection from './config/db.js'; // add .js extension for local file imports
 //const projectRoute = require("./Routes/projectsRoute")
@@ -28,6 +29,15 @@ server.use(cors({
   credentials: true
 }));
 
+server.get("/ping", (_, res) => {
+  res.send("Server is awake!")
+})
+
+setInterval(() => {
+  axios.get("https://raghvendra-bhadouriya-portfolio-bc-api.onrender.com")
+  .then(() => console.log("Pinged server to keep awake"))
+  .catch(() => console.log("Ping failed"))
+}, 5 * 60 *1000);
 
 server.use(express.json())
 
@@ -37,6 +47,10 @@ server.use("/", projectRoute)
 server.get("/", (req, res) => {
     res.status(200).json({message: "This is Home Page"})
     console.log("This is Home Page")
+})
+
+server.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "build", "index.html"));
 })
 
 server.listen(PORT, async (req, res) => {
