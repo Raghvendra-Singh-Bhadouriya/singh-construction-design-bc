@@ -3,7 +3,7 @@ dotenv.config();
 
 import cors from 'cors';
 import express from 'express';
-const { default: axios } = require("axios");
+import axios from 'axios';
 
 import connection from './config/db.js'; // add .js extension for local file imports
 //const projectRoute = require("./Routes/projectsRoute")
