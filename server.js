@@ -34,7 +34,7 @@ server.get("/ping", (_, res) => {
 })
 
 setInterval(() => {
-  axios.get("https://raghvendra-bhadouriya-portfolio-bc-api.onrender.com")
+  axios.get("https://singh-construction-design-bc.onrender.com")
   .then(() => console.log("Pinged server to keep awake"))
   .catch(() => console.log("Ping failed"))
 }, 5 * 60 *1000);
