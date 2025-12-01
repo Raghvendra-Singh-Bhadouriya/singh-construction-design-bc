@@ -100,19 +100,19 @@ router.get("/projects", async (req, res) => {
   const now = Date.now();
 
   if(cachedProjects && (now - lastFetchedTime < CACHE_TIME)) {
-    return res.json(cachedProjects);
+    return res.status(200).json(cachedProjects);
   }
 
     try {
         const allProjects = await projectModel.find()
 
-        cachedProjects = allProjects;
+        cachedProjects = {
+          message: `All projects fetched successfully`,
+          data: allProjects
+        }
         lastFetchedTime = now;
         
-        res.status(200).json({
-            message: `All projects fetched successfully`,
-            data: allProjects
-        })
+        res.status(200).json(cachedProjects)
     } catch (error) {
         res.status(500).json({message: `Error in fetched projects ${error.message}`})
     }
